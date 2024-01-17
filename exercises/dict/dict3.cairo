@@ -8,7 +8,6 @@
 // Execute `starklings hint dict3` or use the `hint` watch subcommand for a hint.
 
 
-// I AM NOT DONE
 
 
 #[derive(Destruct)]
@@ -20,23 +19,29 @@ struct Team {
 #[generate_trait]
 impl TeamImpl of TeamTrait {
     fn new() -> Team {
-        //TODO : initialize empty team with 0 player
+        let mut dict: Felt252Dict<u32> = Default::default();
+        let new_team = Team{level : dict, players_count : 0};
+        new_team
     }
 
     fn get_level(ref self: Team, name: felt252) -> usize {
-        //TODO 
+        //using name as the key here
+        self.level.get(name)
     }
 
     fn add_player(ref self: Team, name: felt252, level: usize) -> () {
-        //TODO
+        self.level.insert(name, level);
+        self.players_count = self.players_count + 1;
     }
 
     fn level_up(ref self: Team, name: felt252) {
-        //TODO
+       let res = self.level.get(name);
+       // update the level using name as key
+       self.level.insert(name, res + 1);
     }
 
-    fn players_count(self: @Team) -> usize {
-        //TODO
+    fn players_count(self: Team) -> usize {
+        self.players_count
     }
 }
 
